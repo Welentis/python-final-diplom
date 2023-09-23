@@ -5,7 +5,7 @@
 1. Создать виртуальное окружение, установить зависимости, при необходимости поменять значения в `orders/.env`
 2. Создать базу данных 
 ```bash
-createdb -U postgres diploma
+createdb -U postgres diplom_db
 ```
 3. Провести миграции 
 ```bash
