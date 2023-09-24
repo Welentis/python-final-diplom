@@ -145,3 +145,5 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = os.environ.get('EMAIL_PORT')
 EMAIL_USE_SSL = os.environ.get('EMAIL_USE_SSL')
 SERVER_EMAIL = EMAIL_HOST_USER
+
+CSRF_TRUSTED_ORIGINS = ['http://*', 'https://*']
