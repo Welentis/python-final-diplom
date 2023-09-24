@@ -7,7 +7,6 @@ su postgres -c "psql -c \"ALTER USER postgres WITH ENCRYPTED PASSWORD 'postgres'
 /usr/sbin/nginx
 
 python manage.py migrate
-python manage.py collectstatic
 
 python manage.py createsuperuser --noinput
 gunicorn orders.wsgi:application --bind unix:/tmp/orders.sock
