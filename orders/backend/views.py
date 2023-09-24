@@ -1,6 +1,7 @@
 import yaml
 from django.contrib.auth import authenticate, login
 from django.http import JsonResponse
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
@@ -12,6 +13,7 @@ from .signals import new_user_registered, new_order
 
 class PartnerUpdate(APIView):
     permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication, )
 
     def post(self, request, file_name):
         if request.user.type == 'shop':
@@ -81,7 +83,8 @@ class UserLoginView(APIView):
 
 
 class ProductView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication, )
 
     #
     def get(self, request, *args, **kwargs):
@@ -91,7 +94,8 @@ class ProductView(APIView):
 
 
 class ProductDetailView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication, )
 
     def get(self, request, id, *args, **kwargs):
         queryset = Product.objects.filter(id=id)
@@ -100,6 +104,8 @@ class ProductDetailView(APIView):
 
 
 class OrderView(APIView):
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication, )
 
     def get(self, request, *args, **qwargs):
         queryset = Order.objects.filter(user_id=request.user.id)

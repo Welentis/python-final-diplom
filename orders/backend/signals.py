@@ -27,7 +27,7 @@ def new_user_registered_signal(user_id, **kwargs):
     user = User.objects.get(id=user_id)
     subject = 'Email Confirmation'
     to = [user.email, ]
-    body = f"Your registration was successful. Your username: {user.username}, your token: {token_new.key}"
+    body = f"Your registration was successful. Your username: {user.username}, your token: Token {token_new.key}"
     message = EmailMultiAlternatives(
         subject=subject,
         body=body,
