@@ -1,0 +1,11 @@
+#!/bin/sh
+
+
+su postgres -c 'pg_ctl start -D /var/lib/postgresql/data'
+su postgres -c "psql -U postgres -c 'CREATE DATABASE diplom_db'"
+su postgres -c "psql -c \"ALTER USER postgres WITH ENCRYPTED PASSWORD 'postgres';\""
+/usr/sbin/nginx
+
+python manage.py migrate
+python manage.py createsuperuser --noinput
+gunicorn Docker.wsgi:application --bind 127.0.0.1:8000
