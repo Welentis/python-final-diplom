@@ -53,6 +53,7 @@ WORKDIR $APP_HOME
 RUN pip3 install --upgrade pip
 COPY ./requirements.txt .
 RUN pip3 install -r requirements.txt
+COPY ../data ./data
 COPY ./orders .
 
 ENTRYPOINT /etc/local.d/custom.start
