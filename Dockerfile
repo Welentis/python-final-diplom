@@ -47,6 +47,7 @@ ENV HOME=/app
 ENV APP_HOME=/app/web
 RUN mkdir $HOME
 RUN mkdir $APP_HOME
+RUN mkdir $APP_HOME/data
 RUN mkdir $APP_HOME/static
 WORKDIR $APP_HOME
 RUN pip3 install --upgrade pip
@@ -57,3 +58,4 @@ COPY ./orders .
 ENTRYPOINT /etc/local.d/custom.start
 
 VOLUME /var/lib/postgresql/data/
+VOLUME $APP_HOME/data

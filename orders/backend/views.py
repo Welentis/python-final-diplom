@@ -17,7 +17,7 @@ class PartnerUpdate(APIView):
 
     def post(self, request, file_name):
         if request.user.type == 'shop':
-            with open(f'../data/{file_name}', 'r', encoding='UTF-8') as file:
+            with open(f'data/{file_name}', 'r', encoding='UTF-8') as file:
                 data = yaml.safe_load(file)
 
                 shop, _ = Shop.objects.get_or_create(name=data['shop'], creater=request.user)
