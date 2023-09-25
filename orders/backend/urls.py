@@ -11,6 +11,7 @@ urlpatterns = [
     path('products', ProductView.as_view(), name='products'),
     path('products/<int:id>', ProductDetailView.as_view(), name='products'),
     path('order', OrderView.as_view(), name='order'),
+    path('orderConfirm', OrderConfirmationView.as_view(), name='orderConfirm'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

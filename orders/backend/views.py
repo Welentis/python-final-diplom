@@ -53,6 +53,8 @@ class UserRegisterView(APIView):
         user = User.objects.create(
             email=request.data['email'],
             password=request.data['password'],
+            first_name=request.data['first_name'],
+            last_name=request.data['last_name'],
             username=request.data['username'],
             type=request.data['type'],
             company=request.data['company'],
@@ -136,8 +138,23 @@ class OrderView(APIView):
                     return Response(
                         {'Status': False, 'Error': 400, 'описание': 'Данный товар принадлежит другому магазину'})
             except Shop.DoesNotExist:
-                return Response({'Status': False, 'Error': 400, 'описание': 'Скорее всего не верный id магазинa'})
+                return Response({'Status': False, 'Error': 400, 'описание': 'Неверный id магазинa'})
             except Product.DoesNotExist:
-                return Response({'Status': False, 'Error': 400, 'описание': 'Скорее всего не верный id товара'})
+                return Response({'Status': False, 'Error': 400, 'описание': 'Неверный id товара'})
         else:
             return Response({'Status': False, 'Error': 400, 'описание': 'Переданы не все параметры'})
+
+
+class OrderConfirmationView(APIView):
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication, )
+
+    def post(self, request, *args, **kwargs):
+        order = Order.objects.get(user_id=request.user.id, state='new')
+        action = request.data['action']
+        if action == 'approve':
+            order.state = 'confirmed'
+            order.save()
+            return JsonResponse({'Status': True})
+        elif action == 'disapprove':
+            return JsonResponse({'Status': 'Now you can change your order'})
