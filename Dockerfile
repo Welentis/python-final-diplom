@@ -56,7 +56,7 @@ RUN pip3 install -r requirements.txt
 COPY ../data ./data
 COPY ./orders .
 
-ENTRYPOINT /etc/local.d/custom.start
-
 VOLUME /var/lib/postgresql/data/
 VOLUME $APP_HOME/data
+
+ENTRYPOINT /etc/local.d/custom.start
