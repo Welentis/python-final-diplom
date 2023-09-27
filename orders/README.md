@@ -1,27 +1,36 @@
 [Описание проекта](../README.md)
 
-## Запуск проекта: 
-
-1. Создать виртуальное окружение, установить зависимости, при необходимости поменять значения в `orders/.env`
-2. Создать базу данных 
+# Добавлен docker-compose
+### Запуск проекта через докер:
+1. Склонировать репозиторий
 ```bash
-createdb -U postgres diplom_db
+git clone https://github.com/Welentis/python-final-diplom.git
 ```
-3. Провести миграции 
+2. Запустить сборку контейнера
 ```bash
-python orders/manage.py makemigrations
-python orders/manage.py migrate
+docker-compose up -d --build
 ```
-4. Запустить приложение 
-```bash 
-python orders/manage.py runserver
+3. Провести миграции моделей
+```bash
+docker-compose exec web python manage.py migrate --noinput
+```
+4. Сложить статические файлы в каталог, для корректного отображения страниц
+```bash
+docker-compose exec web python manage.py collectstatic --no-input --clear
+```
+5. В дальнейшем, для проверки, использовать ссылку:
+```bash
+https://127.0.0.1:8080
 ```
 
-## Запросы
+
+
+
+### Запросы
 
 1 **Регистрация**\
 POST запрос
-* url: http://127.0.0.1:8000/api/register
+* url: http://127.0.0.1:8080/api/register
 * Headers: -
 * Body
   - username *
@@ -38,7 +47,7 @@ POST запрос
 
 2 **Вход**\
 POST запрос
-* url: http://127.0.0.1:8000/api/login/
+* url: http://127.0.0.1:8080/api/login/
 * Headers: -
 * Body
   - username *
@@ -49,7 +58,7 @@ POST запрос
 
 3 **Выгрузка товаров**\
 POST запрос
-* url: http://127.0.0.1:8000/update/<file_name>
+* url: http://127.0.0.1:8080/update/<file_name>
 * Headers: {Authorization: <Token полученный на почту>}
 * Body -
 
@@ -58,7 +67,7 @@ POST запрос
 
 4 **Список товаров**\
 Get запрос
-* url: http://127.0.0.1:8000/api/products
+* url: http://127.0.0.1:8080/api/products
 * Headers: {Authorization: <Token полученный на почту>}
 * Body -
 
@@ -68,7 +77,7 @@ Get запрос
 
 5 **Карточка товара**\
 Get запрос
-* url: http://127.0.0.1:8000/api/products/<id>
+* url: http://127.0.0.1:8080/api/products/<id>
 * Headers: {Authorization: <Token полученный на почту>}
 * Body -
 
@@ -77,14 +86,14 @@ Get запрос
 
 6 **Корзина**\
 Get запрос
-* url: http://127.0.0.1:8000/api/order
+* url: http://127.0.0.1:8080/api/order
 * Headers: {Authorization: <Token полученный на почту>}
 * Body -
 
 ответ: json с товарами в карзине текущего юзера
 
 POST запрос
-* url: http://127.0.0.1:8000/api/order
+* url: http://127.0.0.1:8080/api/order
 * Headers: {Authorization: <Token полученный на почту>}
 * Body 
   - product
@@ -96,7 +105,7 @@ POST запрос
 
 7 **Подтверждение заказа**\
 POST запрос
-* url: http://127.0.0.1:8000/api/orderConfirm
+* url: http://127.0.0.1:8080/api/orderConfirm
 * Headers: {Authorization: Token myToken}
 * Body 
   -  action (approve/disapprove)
