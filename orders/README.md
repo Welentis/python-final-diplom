@@ -20,7 +20,7 @@ docker-compose exec web python manage.py collectstatic --no-input --clear
 ```
 5. В дальнейшем, для проверки, использовать ссылку:
 ```bash
-https://127.0.0.1:8080
+http://127.0.0.1:8080
 ```
 
 
