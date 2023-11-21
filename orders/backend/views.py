@@ -8,18 +8,23 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from .serializers import *
-from .signals import new_user_registered, new_order
+from .Old_signals import new_user_registered, new_order
+from drf_spectacular.views import SpectacularAPIView
+from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 
 
 # Create your views here.
 
-class PartnerUpdate(APIView):
+class PartnerUpdate(SpectacularAPIView, APIView):
     permission_classes = (IsAuthenticated,)
-    authentication_classes = (TokenAuthentication, )
+    authentication_classes = (TokenAuthentication,)
+    throttle_classes = [UserRateThrottle]
 
     def post(self, request, file_name):
         if request.user.type == 'shop':
-            with open(f'data/{file_name}', 'r', encoding='UTF-8') as file:
+            import os
+            print(os.getcwd())
+            with open(f'../data/{file_name}', 'r', encoding='UTF-8') as file:
                 data = yaml.safe_load(file)
 
                 shop, _ = Shop.objects.get_or_create(name=data['shop'], creater=request.user)
@@ -50,7 +55,9 @@ class PartnerUpdate(APIView):
             return JsonResponse({'Status': False, 'error': 403, 'описание:': 'недостаточно прав'})
 
 
-class UserRegisterView(APIView):
+class UserRegisterView(SpectacularAPIView, APIView):
+    throttle_classes = [AnonRateThrottle]
+
     def post(self, request, *args, **kwargs):
         try:
             user = User.objects.create(
@@ -71,7 +78,9 @@ class UserRegisterView(APIView):
             return Response("Username already in use", status=status.HTTP_400_BAD_REQUEST)
 
 
-class UserLoginView(APIView):
+class UserLoginView(SpectacularAPIView, APIView):
+    throttle_classes = [AnonRateThrottle]
+
     def post(self, request, *args, **kwargs):
         user = authenticate(
             request,
@@ -89,9 +98,10 @@ class UserLoginView(APIView):
             return JsonResponse({'status': 'invalid data'})
 
 
-class ProductView(APIView):
+class ProductView(SpectacularAPIView, APIView):
     permission_classes = (IsAuthenticated,)
-    authentication_classes = (TokenAuthentication, )
+    authentication_classes = (TokenAuthentication,)
+    throttle_classes = [UserRateThrottle]
 
     def get(self, request, *args, **kwargs):
         quareset = Product.objects.select_related('category').all()
@@ -99,9 +109,10 @@ class ProductView(APIView):
         return Response(serializer.data)
 
 
-class ProductDetailView(APIView):
+class ProductDetailView(SpectacularAPIView, APIView):
     permission_classes = (IsAuthenticated,)
-    authentication_classes = (TokenAuthentication, )
+    authentication_classes = (TokenAuthentication,)
+    throttle_classes = [UserRateThrottle]
 
     def get(self, request, id, *args, **kwargs):
         queryset = Product.objects.filter(id=id)
@@ -109,9 +120,10 @@ class ProductDetailView(APIView):
         return Response(serializer_class.data, )
 
 
-class OrderView(APIView):
+class OrderView(SpectacularAPIView, APIView):
     permission_classes = (IsAuthenticated,)
-    authentication_classes = (TokenAuthentication, )
+    authentication_classes = (TokenAuthentication,)
+    throttle_classes = [UserRateThrottle]
 
     def get(self, request, *args, **qwargs):
         queryset = Order.objects.filter(user_id=request.user.id)
@@ -149,9 +161,10 @@ class OrderView(APIView):
             return Response({'Status': False, 'Error': 400, 'описание': 'Переданы не все параметры'})
 
 
-class OrderConfirmationView(APIView):
+class OrderConfirmationView(SpectacularAPIView, APIView):
     permission_classes = (IsAuthenticated,)
-    authentication_classes = (TokenAuthentication, )
+    authentication_classes = (TokenAuthentication,)
+    throttle_classes = [UserRateThrottle]
 
     def post(self, request, *args, **kwargs):
         order = Order.objects.get(user_id=request.user.id, state='new')

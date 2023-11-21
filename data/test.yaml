@@ -1,0 +1,16 @@
+categories:
+- id: 1
+  name: Category 1
+- id: 2
+  name: Category 2
+goods:
+- category: 1
+  model: Product 1 model
+  name: Product 1
+  parameters:
+    color: black
+    size: XL
+  price: 1000
+  price_rrc: 1200
+  quantity: 7000
+shop: Test shop
