@@ -98,7 +98,7 @@ class UserLoginView(SpectacularAPIView, APIView):
             return JsonResponse({'status': 'invalid data'})
 
 
-class ProductView(SpectacularAPIView, APIView):
+class ProductView(APIView):
     permission_classes = (IsAuthenticated,)
     authentication_classes = (TokenAuthentication,)
     throttle_classes = [UserRateThrottle]
@@ -109,7 +109,7 @@ class ProductView(SpectacularAPIView, APIView):
         return Response(serializer.data)
 
 
-class ProductDetailView(SpectacularAPIView, APIView):
+class ProductDetailView(APIView):
     permission_classes = (IsAuthenticated,)
     authentication_classes = (TokenAuthentication,)
     throttle_classes = [UserRateThrottle]
