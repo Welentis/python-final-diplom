@@ -1,5 +1,7 @@
+from django.urls import reverse
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.utils.http import urlencode
 
 # Register your models here.
 from .models import *
@@ -25,7 +27,19 @@ class CustomUserAdmin(UserAdmin):
 @admin.register(Shop)
 class ShopAdmin(admin.ModelAdmin):
     model = Shop
-    list_display = ('name', 'url', 'creater',)
+    list_display = ('name', 'url', 'creater', 'view_products')
+
+    def view_products(self, obj):
+        pass
+        count = obj.product_set.count()
+        url = (
+            reverse("admin:orders_product_changelist")
+            + "?"
+            + urlencode({"shop__id": f"{obj.id}"})
+        )
+        return format_html('<a href="{}">{} Products</a>', url, count)
+
+    view_products.short_description = "Products"
 
 
 @admin.register(Category)

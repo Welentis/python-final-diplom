@@ -148,9 +148,7 @@ class Product(models.Model):
 
 
 class ProductInfo(models.Model):
-    # model = models.CharField(max_length=80, verbose_name='Модель', blank=True)
     name = models.CharField(max_length=80, verbose_name='Модель', blank=True)
-    # external_id = models.PositiveIntegerField(verbose_name='Внешний ИД')
     product = models.ForeignKey(Product, verbose_name='Продукт', related_name='product_infos', blank=True,
                                 on_delete=models.CASCADE)
     shop = models.ForeignKey(Shop, verbose_name='Магазин', related_name='product_infos', blank=True,
@@ -202,14 +200,6 @@ class Contact(models.Model):
     type = models.CharField(max_length=50, verbose_name="Тип", default='address')
     value = models.CharField(verbose_name='Значение', max_length=100)
 
-    # city = models.CharField(max_length=50, verbose_name='Город')
-    # street = models.CharField(max_length=100, verbose_name='Улица')
-    # house = models.CharField(max_length=15, verbose_name='Дом', blank=True)
-    # structure = models.CharField(max_length=15, verbose_name='Корпус', blank=True)
-    # building = models.CharField(max_length=15, verbose_name='Строение', blank=True)
-    # apartment = models.CharField(max_length=15, verbose_name='Квартира', blank=True)
-    # phone = models.CharField(max_length=20, verbose_name='Телефон')
-
     class Meta:
         verbose_name = 'Контакты пользователя'
         verbose_name_plural = "Список контактов пользователя"
@@ -226,10 +216,6 @@ class Order(models.Model):
     dt = models.DateTimeField(auto_now_add=True)
     state = models.CharField(verbose_name='Статус', choices=STATE_CHOICES, max_length=15, default='basket')
 
-    # contact = models.ForeignKey(Contact, verbose_name='Контакт',
-    #                             blank=True, null=True,
-    #                             on_delete=models.CASCADE)
-
     class Meta:
         verbose_name = 'Заказ'
         verbose_name_plural = "Список заказ"
@@ -237,10 +223,6 @@ class Order(models.Model):
 
     def __str__(self):
         return str(self.dt)
-
-    # @property
-    # def sum(self):
-    #     return self.ordered_items.aggregate(total=Sum("quantity"))["total"]
 
 
 class OrderItem(models.Model):
@@ -284,7 +266,6 @@ class ConfirmEmailToken(models.Model):
         verbose_name=_("When was this token generated")
     )
 
-    # Key field, though it is not the primary key of the model
     key = models.CharField(
         _("Key"),
         max_length=64,

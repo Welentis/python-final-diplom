@@ -1,3 +1,5 @@
+from django.db import IntegrityError
+from rest_framework import status
 import yaml
 from django.contrib.auth import authenticate, login
 from django.http import JsonResponse
@@ -50,20 +52,23 @@ class PartnerUpdate(APIView):
 
 class UserRegisterView(APIView):
     def post(self, request, *args, **kwargs):
-        user = User.objects.create(
-            email=request.data['email'],
-            password=request.data['password'],
-            first_name=request.data['first_name'],
-            last_name=request.data['last_name'],
-            username=request.data['username'],
-            type=request.data['type'],
-            company=request.data['company'],
-            position=request.data['position']
-        )
-        user.set_password(request.data['password'])
-        user.save()
-        new_user_registered.send(sender=self.__class__, user_id=user.id)
-        return JsonResponse({'Status': True})
+        try:
+            user = User.objects.create(
+                email=request.data['email'],
+                password=request.data['password'],
+                first_name=request.data['first_name'],
+                last_name=request.data['last_name'],
+                username=request.data['username'],
+                type=request.data['type'],
+                company=request.data['company'],
+                position=request.data['position']
+            )
+            user.set_password(request.data['password'])
+            user.save()
+            new_user_registered.send(sender=self.__class__, user_id=user.id)
+            return JsonResponse({'Status': True})
+        except IntegrityError:
+            return Response("Username already in use", status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserLoginView(APIView):
@@ -88,7 +93,6 @@ class ProductView(APIView):
     permission_classes = (IsAuthenticated,)
     authentication_classes = (TokenAuthentication, )
 
-    #
     def get(self, request, *args, **kwargs):
         quareset = Product.objects.select_related('category').all()
         serializer = ProductSerializer(quareset, many=True)
