@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from .serializers import *
-from .Old_signals import new_user_registered, new_order
+from .signals import new_user_registered, new_order
 from drf_spectacular.views import SpectacularAPIView
 from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 
