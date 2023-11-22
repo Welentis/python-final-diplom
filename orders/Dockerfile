@@ -1,4 +1,4 @@
-FROM python:3.11-alpine as builder
+FROM python:3.9-alpine as builder
 
 WORKDIR /usr/src/app
 
@@ -15,7 +15,7 @@ COPY requirements.txt .
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
 
 
-FROM python:3.11-alpine
+FROM python:3.9-alpine
 RUN mkdir -p /app
 RUN addgroup -S app && adduser -S app -G app
 ENV HOME=/app

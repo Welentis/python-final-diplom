@@ -5,6 +5,7 @@ services:
     build: ./orders
     command: gunicorn orders.wsgi:application --bind 0.0.0.0:8000
     volumes:
+      - project:/app/web
       - static_volume:/app/web/static
     expose:
     - 8000
@@ -12,6 +13,7 @@ services:
       - ./orders/.env
     depends_on:
       - db
+      - redis
   db:
     image: postgres:15-alpine
     volumes:
@@ -28,7 +30,19 @@ services:
       - 8080:80
     depends_on:
       - web
-
+  celery:
+    build: ./orders
+    command: celery --app=orders worker --loglevel=info
+    env_file:
+      - ./orders/.env
+    volumes:
+      - project:/app/web
+    depends_on:
+      - web
+      - redis
+  redis:
+    image: redis:5-alpine
 volumes:
   postgres_data:
+  project:
   static_volume:

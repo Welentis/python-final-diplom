@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from .serializers import *
-from .signals import new_user_registered, new_order
+# from .signals import new_user_registered, new_order
 from drf_spectacular.views import SpectacularAPIView
 from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 
@@ -72,7 +72,7 @@ class UserRegisterView(SpectacularAPIView, APIView):
             )
             user.set_password(request.data['password'])
             user.save()
-            new_user_registered.send(sender=self.__class__, user_id=user.id)
+            # new_user_registered.send(sender=self.__class__, user_id=user.id)
             return JsonResponse({'Status': True})
         except IntegrityError:
             return Response("Username already in use", status=status.HTTP_400_BAD_REQUEST)
@@ -145,7 +145,7 @@ class OrderView(SpectacularAPIView, APIView):
                             quantity=request.data['quantity'])
                         order_item, _ = OrderItem.objects.get_or_create(order=order, product=product, shop=shop,
                                                                         quantity=request.data['quantity'])
-                        new_order.send(sender=self.__class__, user_id=request.user.id)
+                        # new_order.send(sender=self.__class__, user_id=request.user.id)
                         return Response({'Status': True, 'Code': 201, 'id': order_item.id})
                     else:
                         return Response({'Status': False, 'Error': 400,
