@@ -7,10 +7,10 @@ from .models import ConfirmEmailToken, User
 from celery import shared_task
 
 
-@shared_task
+@shared_task()
 def new_user_registered_signal(user_id, **kwargs):
     """
-    отправляем письмо с подтрердждением почты
+    отправляем письмо с подтверждением почты
     """
     # send an e-mail to the user
     # token, _ = ConfirmEmailToken.objects.create(user_id=user_id)
@@ -27,7 +27,7 @@ def new_user_registered_signal(user_id, **kwargs):
     message.send()
 
 
-@shared_task
+@shared_task()
 def new_order_signal(user_id, **kwargs):
     # send an e-mail to the user
     user = User.objects.get(id=user_id)
